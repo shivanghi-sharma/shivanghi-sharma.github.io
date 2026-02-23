@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio — Shivanghi Sharma</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:        #0d0b12;
+      --bg2:       #110f1a;
+      --surface:   #161221;
+      --purple:    #6b3fa0;
+      --purple-l:  #9d6fcf;
+      --sage:      #3a5c4e;
+      --sage-l:    #7ab5a0;
+      --rose:      #c9728a;
+      --blush:     #f2d4dc;
+      --text:      #e8e0f0;
+      --muted:     #7a708a;
+      --rule:      #221e30;
+      --gold:      #c8a96e;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    h1, h2, h3, h4, .serif { font-family: 'Playfair Display', serif; }
+
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--purple); }
+
+    /* ── Cursor ── */
+    #cur {
+      position: fixed; width: 10px; height: 10px;
+      background: var(--purple-l); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: transform 0.15s, background 0.3s;
+      mix-blend-mode: screen;
+    }
+    #cur-ring {
+      position: fixed; width: 34px; height: 34px;
+      border: 1px solid var(--purple-l); border-radius: 50%;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%,-50%);
+      opacity: 0.4;
+      transition: left 0.3s ease, top 0.3s ease;
+    }
+
+    /* ── Grain overlay ── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+      opacity: 0.035; pointer-events: none; z-index: 9000;
+    }
+
+    /* ── Glow orbs ── */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(13,11,18,0.82);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 48px; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; font-style: italic;
+      background: linear-gradient(135deg, var(--purple-l), var(--sage-l));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-link {
+      font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      transition: color 0.3s;
+    }
+    .nav-link:hover { color: var(--text); }
+    .nav-cta {
+      font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--bg); background: linear-gradient(135deg, var(--purple-l), var(--sage-l));
+      padding: 10px 26px; text-decoration: none; border-radius: 0;
+      transition: opacity 0.3s;
+    }
+    .nav-cta:hover { opacity: 0.8; }
+
+    /* ── Eyebrow ── */
+    .eyebrow {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--sage-l);
+    }
+
+    /* ── Hero ── */
+    .hero-name {
+      font-size: clamp(4.5rem, 13vw, 11rem);
+      font-weight: 500; line-height: 0.88;
+      letter-spacing: -0.025em;
+    }
+    .hero-name .italic { font-style: italic; color: var(--purple-l); }
+
+    /* ── Reveal ── */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.9s cubic-bezier(0.4,0,0.2,1), transform 0.9s cubic-bezier(0.4,0,0.2,1);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── Marquee ── */
+    @keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .mq-track {
+      display: flex; animation: mq 26s linear infinite; width: max-content;
+    }
+    .mq-track:hover { animation-play-state: paused; }
+    .mq-item {
+      padding: 0 52px;
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 1.1rem; color: var(--muted); white-space: nowrap;
+      border-right: 1px solid var(--rule);
+    }
+
+    /* ── Project cards ── */
+    .proj-card {
+      border: 1px solid var(--rule);
+      padding: 36px 40px;
+      background: var(--bg2);
+      transition: border-color 0.4s, transform 0.4s, box-shadow 0.4s;
+      position: relative; overflow: hidden;
+    }
+    .proj-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(107,63,160,0.06), rgba(58,92,78,0.06));
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .proj-card:hover { border-color: var(--purple); transform: translateY(-3px); box-shadow: 0 16px 40px rgba(107,63,160,0.15); }
+    .proj-card:hover::before { opacity: 1; }
+    .proj-num { font-family: 'Playfair Display', serif; font-style: italic; font-size: 2.5rem; font-weight: 400; color: var(--rule); line-height: 1; }
+    .proj-tag {
+      font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase;
+      border: 1px solid var(--rule); color: var(--muted); padding: 4px 12px;
+      transition: all 0.3s;
+    }
+    .proj-card:hover .proj-tag { border-color: var(--purple); color: var(--purple-l); }
+
+    /* ── Skill bars ── */
+    .skill-track { height: 1px; background: var(--rule); position: relative; }
+    .skill-fill {
+      height: 1px; width: 0; position: relative;
+      background: linear-gradient(90deg, var(--purple), var(--sage-l));
+      transition: width 1.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    .skill-fill::after {
+      content: ''; position: absolute; right: -4px; top: -4px;
+      width: 9px; height: 9px; border-radius: 50%;
+      background: var(--sage-l);
+    }
+
+    /* ── Contact ── */
+    .field-label {
+      font-size: 0.58rem; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--muted); display: block; margin-bottom: 10px;
+    }
+    .field-input {
+      width: 100%; border: none; border-bottom: 1px solid var(--rule);
+      background: transparent; color: var(--text);
+      font-family: 'Jost', sans-serif; font-size: 0.9rem; font-weight: 300;
+      padding: 10px 0; outline: none; transition: border-color 0.3s;
+    }
+    .field-input::placeholder { color: var(--muted); }
+    .field-input:focus { border-color: var(--purple-l); }
+    textarea.field-input { resize: none; }
+
+    .btn-submit {
+      font-family: 'Jost', sans-serif; font-size: 0.62rem;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      border: 1px solid var(--purple); padding: 15px 44px;
+      background: transparent; color: var(--purple-l);
+      cursor: pointer; transition: all 0.35s;
+    }
+    .btn-submit:hover { background: var(--purple); color: var(--text); }
+
+    /* ── Tool badges ── */
+    .tool-badge {
+      font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+      border: 1px solid var(--rule); color: var(--muted);
+      padding: 8px 18px; cursor: default; transition: all 0.3s;
+    }
+    .tool-badge:hover { border-color: var(--sage); color: var(--sage-l); }
+
+    /* ── Divider line ── */
+    .h-rule { height: 1px; background: var(--rule); }
+
+    /* ── Floating dots decoration ── */
+    @keyframes drift {
+      0%,100% { transform: translateY(0) translateX(0); }
+      33% { transform: translateY(-14px) translateX(6px); }
+      66% { transform: translateY(6px) translateX(-10px); }
+    }
+    .drift { animation: drift 8s ease-in-out infinite; }
+    .drift2 { animation: drift 11s ease-in-out infinite reverse; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    body { animation: fadeIn 0.7s ease; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .proj-grid { grid-template-columns: 1fr !important; }
+      .skill-grid { grid-template-columns: 1fr !important; }
+      .contact-grid { grid-template-columns: 1fr !important; }
+      .hero-name { font-size: clamp(3.5rem, 16vw, 6rem); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo">Shivanghi Sharma</span>
+    <ul class="nav-links" style="display:flex;gap:40px;list-style:none;">
+      <li><a class="nav-link" href="#projects">Work</a></li>
+      <li><a class="nav-link" href="#skills">Skills</a></li>
+      <li><a class="nav-link" href="#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="#contact">Hire me</a>
+  </div>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section id="home" style="min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;padding:0 48px 80px;max-width:1200px;margin:0 auto;padding-top:140px;">
+
+  <!-- Glow orbs -->
+  <div class="orb" style="width:520px;height:520px;background:rgba(107,63,160,0.18);top:-60px;right:-100px;"></div>
+  <div class="orb" style="width:320px;height:320px;background:rgba(58,92,78,0.2);bottom:100px;left:-80px;"></div>
+
+  <!-- Drifting circles decoration -->
+  <div class="drift" style="position:absolute;top:22%;right:14%;width:6px;height:6px;border-radius:50%;background:var(--purple-l);opacity:0.5;"></div>
+  <div class="drift2" style="position:absolute;top:38%;right:22%;width:3px;height:3px;border-radius:50%;background:var(--sage-l);opacity:0.6;"></div>
+  <div class="drift" style="position:absolute;bottom:28%;left:18%;width:4px;height:4px;border-radius:50%;background:var(--rose);opacity:0.45;animation-delay:2s;"></div>
+
+  <!-- Content -->
+  <div style="position:relative;z-index:10;">
+    <div class="eyebrow" style="margin-bottom:28px;">Portfolio — 2026</div>
+
+    <h1 class="hero-name" style="margin-bottom:40px;">
+      Hi I'm<br />
+      <span class="italic"> shivanghi</span>
+    </h1>
+
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:32px;border-top:1px solid var(--rule);padding-top:36px;">
+      <div>
+        <p style="font-size:1rem;color:var(--muted);max-width:440px;line-height:1.9;font-weight:300;margin-bottom:28px;">
+          I code and build <em style="font-family:'Playfair Display',serif;color:var(--blush);">intentional digital worlds</em> — where dark aesthetics meet refined craft and every detail is considered.
+        </p>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;">
+          <a href="#projects" style="font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;padding:13px 36px;background:linear-gradient(135deg,var(--purple),var(--sage));color:var(--text);text-decoration:none;transition:opacity 0.3s;" onmouseover="this.style.opacity='0.75'" onmouseout="this.style.opacity='1'">View Work</a>
+          <a href="#contact" style="font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;padding:13px 36px;border:1px solid var(--rule);color:var(--muted);text-decoration:none;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--purple-l)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--rule)';this.style.color='var(--muted)'">Get in touch</a>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-end;">
+        <div style="display:flex;align-items:center;gap:9px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--sage-l);animation:pulse 2.2s ease-in-out infinite;"></span>
+          <span style="font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);">Open to opportunities</span>
+        </div>
+        <span style="font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);">& remote work</span>
+        <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:0.85rem;color:var(--purple-l);">dreamer & creator</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll hint -->
+  <div style="position:absolute;bottom:36px;right:48px;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0.3;">
+    <span style="font-size:0.56rem;letter-spacing:0.3em;writing-mode:vertical-rl;text-transform:uppercase;color:var(--muted);">Scroll</span>
+    <div style="width:1px;height:44px;background:linear-gradient(to bottom,var(--purple-l),transparent);"></div>
+  </div>
+</section>
+
+<!-- ═══════════════ MARQUEE ═══════════════ -->
+<div style="border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);overflow:hidden;padding:18px 0;background:var(--bg2);">
+  <div class="mq-track" id="mq-track"></div>
+</div>
+
+<!-- ═══════════════ PROJECTS ═══════════════ -->
+<section id="projects" style="max-width:1200px;margin:0 auto;padding:130px 48px;">
+
+  <div class="reveal" style="margin-bottom:70px;">
+    <div class="eyebrow" style="margin-bottom:14px;">Selected Work</div>
+    <div style="display:flex;align-items:center;gap:28px;">
+      <h2 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:500;line-height:1.05;">Projects &amp; <em>Case Studies</em></h2>
+      <div style="flex:1;height:1px;background:var(--rule);"></div>
+    </div>
+  </div>
+
+  <div class="proj-grid" id="proj-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;"></div>
+
+</section>
+
+<!-- ═══════════════ SKILLS ═══════════════ -->
+<section id="skills" style="background:var(--bg2);padding:130px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);">
+  <div style="max-width:1200px;margin:0 auto;padding:0 48px;">
+
+    <div class="reveal" style="margin-bottom:70px;">
+      <div class="eyebrow" style="margin-bottom:14px;">Expertise</div>
+      <div style="display:flex;align-items:center;gap:28px;">
+        <h2 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:500;line-height:1.05;">Skills &amp; <em>Craft</em></h2>
+        <div style="flex:1;height:1px;background:var(--rule);"></div>
+      </div>
+    </div>
+
+    <div class="skill-grid" id="skill-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:44px 100px;"></div>
+
+    <!-- Tools -->
+    <div class="reveal" style="margin-top:80px;padding-top:48px;border-top:1px solid var(--rule);">
+      <div class="eyebrow" style="margin-bottom:24px;">Tools &amp; Technologies</div>
+      <div id="tools" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ CONTACT ═══════════════ -->
+<section id="contact" style="max-width:1200px;margin:0 auto;padding:130px 48px;">
+
+  <div class="contact-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:start;">
+
+    <!-- Left -->
+    <div class="reveal">
+      <div class="eyebrow" style="margin-bottom:18px;">Let's Connect</div>
+      <h2 style="font-size:clamp(2.2rem,5vw,3.8rem);font-weight:500;line-height:1.0;margin-bottom:32px;">
+        Let's make<br /><em style="color:var(--purple-l);">something dark</em><br />& beautiful.
+      </h2>
+      <p style="color:var(--muted);font-size:0.88rem;line-height:1.95;margin-bottom:48px;max-width:360px;">
+        Whether you have a vision, a half-formed idea, or just want to say hello — reach out. I love collaborating on projects that push creative boundaries.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:28px;">
+        <div>
+          <div class="eyebrow" style="margin-bottom:7px;">Email</div>
+          <a href="mailto:hello@yourname.com" style="color:var(--text);text-decoration:none;font-size:0.9rem;transition:color 0.3s;" onmouseover="this.style.color='var(--purple-l)'" onmouseout="this.style.color='var(--text)'">sharmashivanghi892@gmail.com</a>
+        </div>
+        <div>
+          <div class="eyebrow" style="margin-bottom:12px;">Find me at</div>
+          <div style="display:flex;gap:18px;flex-wrap:wrap;">
+            <a href="#" style="font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:3px;transition:all 0.3s;" onmouseover="this.style.color='var(--purple-l)';this.style.borderColor='var(--purple)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--rule)'">LinkedIn</a>
+            <a href="#" style="font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:3px;transition:all 0.3s;" onmouseover="this.style.color='var(--purple-l)';this.style.borderColor='var(--purple)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--rule)'">GitHub</a>
+            <a href="#" style="font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:3px;transition:all 0.3s;" onmouseover="this.style.color='var(--purple-l)';this.style.borderColor='var(--purple)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--rule)'">Leetcode</a>
+
+          </div>
+        </div>
+        <div style="border:1px solid var(--rule);padding:22px 26px;background:var(--bg2);">
+          <div class="eyebrow" style="margin-bottom:10px;">Availability</div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--sage-l);flex-shrink:0;animation:pulse 2s ease-in-out infinite;"></span>
+            <span style="font-size:0.82rem;color:var(--text);">Currently accepting new projects</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Form -->
+    <div class="reveal" style="transition-delay:0.15s">
+      <form id="cform" style="display:flex;flex-direction:column;gap:34px;">
+        <div>
+          <label class="field-label">Your Name</label>
+          <input type="text" class="field-input" placeholder="shyam gupta" required />
+        </div>
+        <div>
+          <label class="field-label">Email Address</label>
+          <input type="email" class="field-input" placeholder="xyz@gmail.com" required />
+        </div>
+        <div>
+          <label class="field-label">Subject</label>
+          <input type="text" class="field-input" placeholder="Project enquiry / collaboration" />
+        </div>
+        <div>
+          <label class="field-label">Message</label>
+          <textarea class="field-input" rows="5" placeholder="Tell me about your vision..." required></textarea>
+        </div>
+        <div>
+          <button type="submit" class="btn-submit">Send Message →</button>
+          <p id="ok-msg" style="display:none;margin-top:18px;font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--sage-l);">✓ Received. I'll be in touch soon.</p>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer style="border-top:1px solid var(--rule);padding:36px 48px;background:var(--bg);">
+  <div style="max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;">
+    <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--muted);">Your Name — 2025</span>
+    <span style="font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);">Designed with darkness &amp; intention</span>
+  </div>
+</footer>
+
+<script>
+// ── Data ──────────────────────────────────────────────
+
+const projects = [
+  {
+    num: '01',
+    title: 'Movie website',
+    year: '2025',
+    tags: ['UI Design', 'React'],
+    desc: 'A dark, immersive web experience for a creative studio — built with motion and mood.',
+  },
+  {
+    num: '02',
+    title: 'Stocks market analysis',
+    year: '2024',
+    tags: ['nextjs', 'code rabbit' , 'sacden' , 'Better auth' , 'Mongo DB'],
+    desc: 'Full brand identity for an independent fashion label: dark florals, editorial typography.',
+  },
+  
+];
+
+const skills = [
+  { name: 'UI Design',          pct: 92 },
+  { name: 'react / nextjs',    pct: 85 },
+  { name: 'Docker',    pct: 60 },
+  { name: 'Git & Github', pct: 88 },
+  { name: 'SQL and No SQL DBs',     pct: 94 },
+  { name: 'Frontend APIs',          pct: 72 },
+];
+
+const tools = ['HTML/CSS','JavaScript','React','Next.js','Tailwind CSS','TypeScript','Node.js','Git'];
+const mqWords = ['available for hire','open to freelance','ui designer','creative developer','based in your city','dark aesthetics','intentional design'];
+
+// ── Marquee ───────────────────────────────────────────
+
+const mqTrack = document.getElementById('mq-track');
+[...mqWords,...mqWords].forEach(w => {
+  const s = document.createElement('span');
+  s.className = 'mq-item';
+  s.textContent = w;
+  mqTrack.appendChild(s);
+});
+
+// ── Projects ──────────────────────────────────────────
+
+const projGrid = document.getElementById('proj-grid');
+projects.forEach((p, i) => {
+  const card = document.createElement('div');
+  card.className = 'proj-card reveal';
+  card.style.transitionDelay = `${i * 0.1}s`;
+  card.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;">
+      <span class="proj-num">${p.num}</span>
+      <span style="font-size:0.62rem;letter-spacing:0.18em;color:var(--muted);text-transform:uppercase;">${p.year}</span>
+    </div>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:500;line-height:1.1;margin-bottom:14px;color:var(--text);">${p.title}</h3>
+    <p style="font-size:0.8rem;color:var(--muted);line-height:1.8;margin-bottom:28px;font-weight:300;">${p.desc}</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">${p.tags.map(t=>`<span class="proj-tag">${t}</span>`).join('')}</div>
+      <a href="#" style="font-size:0.75rem;color:var(--purple-l);text-decoration:none;letter-spacing:0.08em;transition:color 0.3s;" onmouseover="this.style.color='var(--sage-l)'" onmouseout="this.style.color='var(--purple-l)'">View project →</a>
+    </div>`;
+  projGrid.appendChild(card);
+});
+
+// ── Skills ────────────────────────────────────────────
+
+const skillGrid = document.getElementById('skill-grid');
+skills.forEach((s, i) => {
+  const div = document.createElement('div');
+  div.className = 'reveal skill-item';
+  div.style.transitionDelay = `${i * 0.08}s`;
+  div.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
+      <span style="font-size:0.85rem;color:var(--text);font-weight:300;">${s.name}</span>
+      <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--muted);">${s.pct}</span>
+    </div>
+    <div class="skill-track"><div class="skill-fill" data-pct="${s.pct}"></div></div>`;
+  skillGrid.appendChild(div);
+});
+
+// ── Tools ─────────────────────────────────────────────
+
+const toolsEl = document.getElementById('tools');
+tools.forEach(t => {
+  const span = document.createElement('span');
+  span.className = 'tool-badge';
+  span.textContent = t;
+  toolsEl.appendChild(span);
+});
+
+// ── Observers ─────────────────────────────────────────
+
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+
+const skillObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const fill = e.target.querySelector('.skill-fill');
+      if (fill) fill.style.width = fill.dataset.pct + '%';
+    }
+  });
+}, { threshold: 0.4 });
+
+setTimeout(() => {
+  document.querySelectorAll('.reveal').forEach(el => {
+    revealObs.observe(el);
+    if (el.classList.contains('skill-item')) skillObs.observe(el);
+  });
+}, 80);
+
+// ── Cursor ────────────────────────────────────────────
+
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+(function animateCursor() {
+  cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+  rx += (mx - rx) * 0.1; ry += (my - ry) * 0.1;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animateCursor);
+})();
+
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => { cur.style.transform = 'translate(-50%,-50%) scale(2.5)'; ring.style.opacity = '0'; });
+  el.addEventListener('mouseleave', () => { cur.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.opacity = '0.4'; });
+});
+
+// ── Contact Form ──────────────────────────────────────
+
+document.getElementById('cform').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const ok = document.getElementById('ok-msg');
+  ok.style.display = 'block';
+  this.reset();
+  setTimeout(() => ok.style.display = 'none', 5000);
+});
+</script>
+
+<style>
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+</style>
+
+</body>
+</html>
