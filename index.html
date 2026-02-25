@@ -238,7 +238,11 @@
       .hero-name { font-size: clamp(3.5rem, 16vw, 6rem); }
     }
   </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
 </head>
+
 <body>
 
 <!-- Cursor -->
@@ -374,7 +378,7 @@
         <div>
           <div class="eyebrow" style="margin-bottom:12px;">Find me at</div>
           <div style="display:flex;gap:18px;flex-wrap:wrap;">
-            <a href="www.linkedin.com/in/shivanghi-sharma-4b375021a" style="font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:3px;transition:all 0.3s;" onmouseover="this.style.color='var(--purple-l)';this.style.borderColor='var(--purple)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--rule)'">LinkedIn</a>
+            <a href="https://www.linkedin.com/in/shivanghi-sharma-4b375021a" style="font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:3px;transition:all 0.3s;" onmouseover="this.style.color='var(--purple-l)';this.style.borderColor='var(--purple)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--rule)'">LinkedIn</a>
             <a href="https://github.com/shivanghi-sharma" style="font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:3px;transition:all 0.3s;" onmouseover="this.style.color='var(--purple-l)';this.style.borderColor='var(--purple)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--rule)'">GitHub</a>
             <a href="https://leetcode.com/u/shivanghi_sharma/" style="font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:3px;transition:all 0.3s;" onmouseover="this.style.color='var(--purple-l)';this.style.borderColor='var(--purple)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--rule)'">Leetcode</a>
 
@@ -395,19 +399,19 @@
       <form id="cform" style="display:flex;flex-direction:column;gap:34px;">
         <div>
           <label class="field-label">Your Name</label>
-          <input type="text" class="field-input" placeholder="shyam gupta" required />
+          <input type="text" class="field-input" name = "name" placeholder="shyam gupta" required />
         </div>
         <div>
           <label class="field-label">Email Address</label>
-          <input type="email" class="field-input" placeholder="xyz@gmail.com" required />
+          <input type="email" class="field-input" name="email" placeholder="xyz@gmail.com" required />
         </div>
         <div>
           <label class="field-label">Subject</label>
-          <input type="text" class="field-input" placeholder="Project enquiry / collaboration" />
+          <input type="text" class="field-input" name="subject" placeholder="Project enquiry / collaboration" />
         </div>
         <div>
           <label class="field-label">Message</label>
-          <textarea class="field-input" rows="5" placeholder="Tell me about your vision..." required></textarea>
+          <textarea class="field-input" rows="5" name="message" placeholder="Tell me about your vision..." required></textarea>
         </div>
         <div>
           <button type="submit" class="btn-submit">Send Message →</button>
@@ -458,7 +462,7 @@ const skills = [
 ];
 
 const tools = ['HTML/CSS','JavaScript','React','Next.js','Tailwind CSS','TypeScript','Node.js','Git'];
-const mqWords = ['available for hire','open to freelance','ui designer','creative developer','based in your city','dark aesthetics','intentional design'];
+const mqWords = ['available for collaboration','freelancing projects','creative developer','based in your vision','intentional design'];
 
 // ── Marquee ───────────────────────────────────────────
 
@@ -576,6 +580,24 @@ document.getElementById('cform').addEventListener('submit', function(e) {
   50% { opacity: 0.4; transform: scale(0.8); }
 }
 </style>
+
+<script>
+  emailjs.init("d9ekFWtdBl-wStFKH");
+
+  document.getElementById("cform").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    emailjs.sendForm("service_bmdnza6",  "template_b0pldid", this)
+      .then(() => {
+        alert("Message sent successfully! ✅");
+        this.reset();
+      })
+      .catch((error) => {
+        alert("Something went wrong. Please try again. ❌");
+        console.error(error);
+      });
+  });
+</script>
 
 </body>
 </html>
